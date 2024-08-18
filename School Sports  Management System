@@ -1,0 +1,89 @@
+import pandas as pd
+
+# Initialize DataFrames
+teams = pd.DataFrame(columns=['Team ID', 'Team Name'])
+players = pd.DataFrame(columns=['Player ID', 'Player Name', 'Team ID', 'Position', 'Goals'])
+matches = pd.DataFrame(columns=['Match ID', 'Date', 'Team 1', 'Team 2', 'Score 1', 'Score 2'])
+# Add a new team
+def add_team():
+    team_id = input("Enter team ID: ")
+    team_name = input("Enter team name: ")
+    global teams
+    teams = teams.append({'Team ID': team_id, 'Team Name': team_name}, ignore_index=True)
+    print("Team added successfully.\n")
+
+# Add a new player
+def add_player():
+    player_id = input("Enter player ID: ")
+    player_name = input("Enter player name: ")
+    team_id = input("Enter team ID: ")
+    position = input("Enter position: ")
+    global players
+    players = players.append({'Player ID': player_id, 'Player Name': player_name, 'Team ID': team_id, 'Position': position, 'Goals': 0}, ignore_index=True)
+    print("Player added successfully.\n")
+
+# Schedule a match
+def schedule_match():
+    match_id = input("Enter match ID: ")
+    date = input("Enter date (YYYY-MM-DD): ")
+    team_1 = input("Enter team 1 ID: ")
+    team_2 = input("Enter team 2 ID: ")
+    global matches
+    matches = matches.append({'Match ID': match_id, 'Date': date, 'Team 1': team_1, 'Team 2': team_2, 'Score 1': None, 'Score 2': None}, ignore_index=True)
+    print("Match scheduled successfully.\n")
+
+# Record match results
+def record_match_result():
+    match_id = input("Enter match ID: ")
+    score_1 = int(input("Enter score for team 1: "))
+    score_2 = int(input("Enter score for team 2: "))
+    global matches
+    matches.loc[matches['Match ID'] == match_id, ['Score 1', 'Score 2']] = [score_1, score_2]
+    print("Match result recorded successfully.\n")
+
+# Display team information
+def display_teams():
+    global teams
+    print("\nTeams:")
+    print(teams)
+    print()
+
+# Display player statistics
+def display_players():
+    global players
+    print("\nPlayers:")
+    print(players)
+    print()
+
+# Display match results
+def display_matches():
+    global matches
+    print("\nMatches:")
+    print(matches)
+    print()
+
+# Increase player goals
+def increase_goals():
+    player_id = input("Enter player ID: ")
+    goals = int(input("Enter number of goals to add: "))
+    global players
+    if player_id in players['Player ID'].values:
+        players.loc[players['Player ID'] == player_id, 'Goals'] += goals
+        print("Player goals updated successfully.\n")
+    else:
+        print("Player ID not found.\n")
+
+# Decrease player goals
+def decrease_goals():
+    player_id = input("Enter player ID: ")
+    goals = int(input("Enter number of goals to subtract: "))
+    global players
+    if player_id in players['Player ID'].values:
+        current_goals = players.loc[players['Player ID'] == player_id, 'Goals'].values[0]
+        if current_goals >= goals:
+            players.loc[players['Player ID'] == player_id, 'Goals'] -= goals
+            print("Player goals updated successfully.\n")
+        else:
+            print("Insufficient goals to subtract.\n")
+    else:
+        print("Player ID not found.\n")
